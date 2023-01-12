@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Redirect, Render, Session } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Redirect,
+  Render,
+  Session,
+} from '@nestjs/common';
 import session from 'express-session';
 import { AppService } from './app.service';
 import db from './db';
+import * as bcrypt from 'bcrypt';
+import UserDataDto from './userdata.dto';
 
 @Controller()
 export class AppController {
@@ -26,10 +36,16 @@ export class AppController {
     return {};
   }
 
-@Post('/register')
-@Redirect()
-register() {
-
-}
-
+  @Post('/register')
+  @Redirect()
+  async register(@Body() userdata: UserDataDto) {
+   await db.execute('INSERT INTO users (username, password) VALUES (?, ?)',
+     [ userdata.username,
+      await bcrypt.hash(userdata.password, 10)
+     ],
+    );
+    return {
+      url: '/',
+    };
+  }
 }
