@@ -1,4 +1,4 @@
-import { Controller, Get, Render, Session } from '@nestjs/common';
+import { Controller, Get, Post, Redirect, Render, Session } from '@nestjs/common';
 import session from 'express-session';
 import { AppService } from './app.service';
 import db from './db';
@@ -17,6 +17,19 @@ export class AppController {
       userName = 'Guest';
     }
 
-    return { message: 'Welcome to the homepage' };
+    return { message: `Welcome to the homepage, ${userName}` };
   }
+
+  @Get('/register')
+  @Render('register')
+  registerForm() {
+    return {};
+  }
+
+@Post('/register')
+@Redirect()
+register() {
+
+}
+
 }
